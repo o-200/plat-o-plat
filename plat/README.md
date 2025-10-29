@@ -28,7 +28,11 @@
 ## Project setup
 
 ```bash
-$ npm install
+cp .env.example .env
+npm i
+docker compose up -d 
+npx prisma migrate
+npm run start
 ```
 
 ## Compile and run the project
