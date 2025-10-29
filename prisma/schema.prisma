@@ -1,0 +1,50 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Block {
+  id          Int          @id @default(autoincrement())
+  title       String
+  kind        BlockKind    @default(CONTENT)
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  serviceTags ServiceTag[]
+
+  @@map("blocks")
+}
+
+model Service {
+  id           Int        @id @default(autoincrement())
+  title        String
+  serviceTagId Int        @map("service_tag_id")
+  serviceTag   ServiceTag @relation(fields: [serviceTagId], references: [id], onDelete: Cascade)
+
+  @@index([serviceTagId])
+  @@map("services")
+}
+
+model ServiceTag {
+  id        Int     @id @default(autoincrement())
+  title     String
+  imageLink String? @map("image_link")
+
+  services Service[]
+
+  blockId Int   @map("block_id")
+  block   Block @relation(fields: [blockId], references: [id], onDelete: Cascade)
+
+  @@index([blockId])
+  @@map("service_tags")
+}
+
+enum BlockKind {
+  CONTENT @map("content")
+  SERVICE @map("service")
+
+  @@map("block_kind")
+}
