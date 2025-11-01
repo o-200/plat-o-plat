@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateServiceDto } from './dto/update-service.dto';
 import { PrismaService } from '../prisma/prisma.service'; // relative to avoid alias issues
 import { CreateServiceDto } from './dto/create-service.dto';
+import { FindAllByServiceTagDto } from './dto/find-all-by-service-tag.dto';
 
 @Injectable()
 export class ServicesService {
@@ -11,11 +12,18 @@ export class ServicesService {
     return this.prisma.service.findMany();
   }
 
-  findByServiceTag(serviceTagId: number) {
-    return this.prisma.service.findMany({
-      where: { serviceTagId: serviceTagId },
-      orderBy: { id: 'desc' },
+  async findByServiceTag(query: FindAllByServiceTagDto) {
+    const services = await this.prisma.service.findMany({
+      where: query.serviceTagId
+        ? { serviceTagId: query.serviceTagId }
+        : undefined,
+      orderBy: query.priority
+        ? { id: query.priority }
+        : undefined,
     });
+
+    if (services.length === 0) throw new NotFoundException('No services');
+    return services
   }
 
   findOne(id: number) {
