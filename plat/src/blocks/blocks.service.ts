@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateBlockDto } from './dto/create-block.dto';
 import { UpdateBlockDto } from './dto/update-block.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { FindAllBlocksDto } from './dto/find-all-blocks.dto';
 
 @Injectable()
 export class BlocksService {
@@ -11,8 +12,12 @@ export class BlocksService {
     return this.prisma.block.create({ data: createBlockDto });
   }
 
-  findAll() {
-    return this.prisma.block.findMany();
+  findAll({ priority }: FindAllBlocksDto) {
+    return this.prisma.block.findMany({
+      orderBy: priority
+      ? { priority: priority }
+      : undefined,
+    });
   }
 
   findOne(id: number) {

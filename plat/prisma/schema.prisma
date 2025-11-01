@@ -13,6 +13,7 @@ model Block {
   kind        BlockKind    @default(CONTENT)
   createdAt   DateTime     @default(now()) @map("created_at")
   updatedAt   DateTime     @updatedAt @map("updated_at")
+  priority    Int          @default(autoincrement())
   serviceTags ServiceTag[]
 
   @@map("blocks")
@@ -21,6 +22,7 @@ model Block {
 model Service {
   id           Int        @id @default(autoincrement())
   title        String
+  priority     Int        @default(autoincrement())
   serviceTagId Int        @map("service_tag_id")
   serviceTag   ServiceTag @relation(fields: [serviceTagId], references: [id], onDelete: Cascade)
 
@@ -29,14 +31,13 @@ model Service {
 }
 
 model ServiceTag {
-  id        Int     @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   title     String
-  imageLink String? @map("image_link")
-
-  services Service[]
-
-  blockId Int   @map("block_id")
-  block   Block @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  priority  Int       @default(autoincrement())
+  imageLink String?   @map("image_link")
+  blockId   Int       @map("block_id")
+  block     Block     @relation(fields: [blockId], references: [id], onDelete: Cascade)
+  services  Service[]
 
   @@index([blockId])
   @@map("service_tags")

@@ -7,6 +7,7 @@ import {
   Param,
   Delete,
   ValidationPipe,
+  Query,
 } from '@nestjs/common';
 import { BlocksService } from './blocks.service';
 import { CreateBlockDto } from './dto/create-block.dto';
@@ -16,9 +17,11 @@ import {
   ApiBody,
   ApiCreatedResponse,
   ApiOperation,
+  ApiQuery,
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { FindAllBlocksDto, OrderEnum } from './dto/find-all-blocks.dto';
 
 @Controller('blocks')
 @ApiTags('Blocks')
@@ -47,12 +50,20 @@ export class BlocksController {
   @ApiOperation({
     summary: 'Список блоков',
   })
+  @ApiQuery({
+    name: 'priority',
+    required: false,
+    enum: OrderEnum,
+    description: 'Сортировка по приоритету.',
+  })
   @ApiResponse({
     type: CreateBlockDto,
     isArray: true,
   })
-  findAll() {
-    return this.blocksService.findAll();
+  findAll(
+    @Query() findAllBlocksDto: FindAllBlocksDto
+  ) {
+    return this.blocksService.findAll(findAllBlocksDto);
   }
 
   @Get(':id')
@@ -68,7 +79,10 @@ export class BlocksController {
   @ApiOperation({ summary: 'Обновление блока' })
   @ApiBody({ type: UpdateBlockDto })
   @ApiResponse({ type: UpdateBlockDto })
-  update(@Param('id') id: string, @Body() updateBlockDto: UpdateBlockDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateBlockDto: UpdateBlockDto
+  ) {
     return this.blocksService.update(+id, updateBlockDto);
   }
 

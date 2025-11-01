@@ -2,7 +2,8 @@ import { Controller, Get, Body, Patch, Param, Delete, Post, Query, ParseIntPipe 
 import { ServicesService } from './services.service';
 import { CreateServiceDto } from './dto/create-service.dto';
 import { UpdateServiceDto } from './dto/update-service.dto';
-import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { FindAllByServiceTagDto, OrderEnum } from './dto/find-all-by-service-tag.dto';
 
 @Controller('services')
 @ApiTags('Services')
@@ -21,14 +22,20 @@ export class ServicesController {
   @ApiOperation({
     summary: 'Поиск услуг по тегу',
   })
+  @ApiQuery({
+      name: 'priority',
+      required: false,
+      enum: OrderEnum,
+      description: 'Сортировка по приоритету.',
+    })
   @ApiResponse({
     type: CreateServiceDto,
     isArray: true,
   })
   findByServiceTag(
-    @Query('blockId', ParseIntPipe) serviceTagId: number
+    @Query() findAllByServiceTagDto: FindAllByServiceTagDto,
   ) {
-    return this.servicesService.findByServiceTag(serviceTagId);
+    return this.servicesService.findByServiceTag(findAllByServiceTagDto);
   }
 
   @Get(':id')

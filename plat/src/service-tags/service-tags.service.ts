@@ -3,16 +3,20 @@ import { UpdateServiceTagDto } from './dto/update-service-tag.dto';
 import { PrismaService } from '../prisma/prisma.service'; // relative to avoid alias issues
 import { CreateServiceTagDto } from './dto/create-service-tag.dto';
 import { BlockKind } from '@prisma/client';
-import { FindServiceTagsDto } from './dto/find-by-block-service-tags.dto';
+import { FindAllServiceTagsDto } from './dto/find-all-service-tags.dto';
 
 @Injectable()
 export class ServiceTagsService {
   constructor(private readonly prisma: PrismaService) {}
 
-  async findAll(query: FindServiceTagsDto) {
+  async findAll(query: FindAllServiceTagsDto) {
     const tags = await this.prisma.serviceTag.findMany({
-      where: { ...query },
-      orderBy: { id: 'desc' },
+      where:   query.blockId
+        ? { blockId: query.blockId }
+        : undefined,
+      orderBy: query.priority
+        ? { id: query.priority }
+        : undefined,
     });
 
     if (tags.length === 0) throw new NotFoundException('No service tags');
