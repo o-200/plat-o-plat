@@ -6,6 +6,8 @@ export * from "./breadcrumbs/index";
 export * from "./form/index";
 export * from "./fields/index";
 export * from "./footer/index";
+export * from "./adminPage/sidebar/index"
+export * from "./adminPage/header/index";
 
 // Shadcn components
 export * from "./shadcn/accordion";

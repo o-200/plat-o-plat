@@ -5,7 +5,7 @@ import { ProductsComponent } from "./products";
 import { SearchComponentMain } from "./search";
 import { ServicesComponent } from "./services";
 
-export default function MainPage({ }) {
+export default function HomePage() {
     return (
         <div className="container mx-auto md:p-8">
             <HeaderComponent />

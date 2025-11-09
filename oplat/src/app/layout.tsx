@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { NavigationMenuApp, ContactUs, FooterComponent } from "@/components/ui";
 import { ThemeProvider } from "next-themes";
+import { Toaster } from "sonner";
 
 import "./globals.css";
 
@@ -34,12 +35,13 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          <NavigationMenuApp />
           <div className='root w-full md:w-3/4 mx-auto flex justify-center items-center p-1 md:p-10 box-border'>
-            <NavigationMenuApp />
             <ContactUs />
             {children}
           </div>
           <FooterComponent />
+          <Toaster />
         </ThemeProvider>
       </body>
     </html>
